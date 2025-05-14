@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Especificação Técnica de Software - Sistema de Gestão Clínica</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+    <div class="progress-controls">
+        <h4 style="margin-top: 0;">Progresso</h4>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar">0%</div>
+        </div>
+        <div class="buttons">
+            <button onclick="saveProgress()">Salvar</button>
+            <button onclick="downloadProgress()">Download</button>
+            <button onclick="importProgress()">Importar</button>
+            <button onclick="checkAll()">Marcar Todos</button>
+        </div>
+        <input type="file" id="importFile" style="display: none;" onchange="handleImport(this)">
+    </div>
+
+    <div class="header">
+        <img class="logo" src="favico.ico" alt="PontoBR Sistemas Logo">
+        <h1>ESPECIFICAÇÃO TÉCNICA DE SOFTWARE</h1>
+        <h2>Sistema de Gestão Clínica - PontoBR</h2>
+        <h3>Substituto do Sistema Coliseu</h3>
+    </div>
+    
+    <div class="meta-info">
+        <p><strong>Cliente:</strong> Fundação Guimarães Rosa (FGR)</p>
+        <p><strong>Desenvolvedor:</strong> PontoBR Sistemas</p>
+        <p><strong>Data:</strong> 14 de maio de 2025</p>
+        <p><strong>Versão:</strong> 1.0</p>
+    </div>
+    
+    <div class="toc">
+        <h2>SUMÁRIO</h2>
+        <ol>
+            <li>INTRODUÇÃO</li>
+            <li>DESCRIÇÃO GERAL DO SISTEMA</li>
+            <li>REQUISITOS FUNCIONAIS</li>
+            <li>REQUISITOS NÃO FUNCIONAIS</li>
+            <li>ARQUITETURA TÉCNICA</li>
+            <li>MODELO DE DADOS</li>
+            <li>INTERFACES DE USUÁRIO</li>
+            <li>PLANO DE IMPLEMENTAÇÃO</li>
+            <li>CONSIDERAÇÕES DE SEGURANÇA</li>
+            <li>ANEXOS E REFERÊNCIAS</li>
+        </ol>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <h2>1. INTRODUÇÃO</h2>
+    
+    <h3>1.1 Propósito do Documento</h3>
+    <p>Este documento apresenta a especificação técnica detalhada para o desenvolvimento de um novo sistema de gestão clínica para a Fundação Guimarães Rosa (FGR), que substituirá o atual sistema Coliseu. O documento inclui requisitos funcionais, não funcionais, arquitetura técnica, modelos de dados e diretrizes de implementação.</p>
+    
+    <h3>1.2 Escopo do Projeto</h3>
+    <p>O projeto contempla o desenvolvimento de um sistema integrado para gestão completa da Clínica de Saúde da FGR, abrangendo funcionalidades como agendamento de consultas, gestão de prontuários, cadastro de profissionais e pacientes, faturamento de convênios, controle financeiro e relatórios gerenciais.</p>
+    
+    <h3>1.3 Definições, Acrônimos e Abreviações</h3>
+    <ul>
+        <li><strong>REST</strong>: Representational State Transfer</li>
+        <li><strong>SGBD</strong>: Sistema Gerenciador de Banco de Dados</li>
+        <li><strong>UI/UX</strong>: User Interface/User Experience</li>
+    </ul>
+    
+    <h3>1.4 Visão Geral do Documento</h3>
+    <p>Este documento está estruturado da seguinte forma:</p>
+    <ul>
+        <li>Seção 1: Introdução e visão geral</li>
+        <li>Seção 2: Descrição geral do sistema</li>
+        <li>Seção 3: Requisitos funcionais</li>
+        <li>Seção 4: Requisitos não funcionais</li>
+        <li>Seção 5: Arquitetura técnica</li>
+        <li>Seção 6: Modelos de dados</li>
+        <li>Seção 7: Interfaces de usuário</li>
+        <li>Seção 8: Plano de implementação</li>
+        <li>Seção 9: Considerações de segurança</li>
+        <li>Seção 10: Anexos e referências</li>
+    </ul>
+    
+    <div class="page-break"></div>
+    
+    <h2>2. DESCRIÇÃO GERAL DO SISTEMA</h2>
+    
+    <h3>2.1 Perspectiva do Produto</h3>
+    <p>O sistema proposto será uma aplicação web moderna, desenvolvida com tecnologias de ponta (NextJS, TypeScript, Prisma e MySQL), que substituirá integralmente o atual sistema Coliseu. Será projetado para oferecer uma experiência de usuário intuitiva e responsiva, mantendo todas as funcionalidades existentes e adicionando melhorias significativas.</p>
+    
+    <h3>2.2 Funções do Produto</h3>
+    <p>O sistema de gestão clínica deverá:</p>
+    <ul>
+        <li>Gerenciar o agendamento de consultas e procedimentos</li>
+        <li>Administrar cadastros de pacientes, médicos, funcionários e convênios</li>
+        <li>Processar faturamento para diversos convênios médicos</li>
+        <li>Gerenciar prontuários eletrônicos</li>
+        <li>Controlar aspectos financeiros (notas fiscais, pagamentos, repasses)</li>
+        <li>Gerar relatórios gerenciais e estatísticos</li>
+        <li>Controlar acesso com diferentes níveis de permissão</li>
+        <li>Automatizar alertas de vencimento de documentos/certificações</li>
+        <li>Otimizar processos administrativos</li>
+    </ul>
+    
+    <h3>2.3 Características do Usuário</h3>
+    <p>O sistema contará com os seguintes perfis de usuário:</p>
+    <ul>
+        <li><strong>Administrador</strong>: acesso completo ao sistema</li>
+        <li><strong>Recepcionista</strong>: agendamento, cadastro de pacientes, atendimento presencial</li>
+        <li><strong>Médico</strong>: acesso à agenda e prontuários dos seus pacientes</li>
+        <li><strong>Financeiro</strong>: acesso aos módulos de faturamento, notas fiscais e repasses</li>
+        <li><strong>Gestor</strong>: acesso a relatórios gerenciais e estatísticos</li>
+    </ul>
+    
+    <h3>2.4 Restrições e Limitações</h3>
+    <ul>
+        <li>O sistema deve operar em ambiente web, com suporte a navegadores modernos</li>
+        <li>Deve implementar controles de acesso baseados em perfil</li>
+        <li>Deve garantir a confidencialidade dos dados médicos</li>
+        <li>Deve estar em conformidade com a LGPD</li>
+        <li>Deve permitir a migração completa dos dados do sistema Coliseu</li>
+    </ul>
+    
+    <h3>2.5 Pressupostos e Dependências</h3>
+    <ul>
+        <li>Disponibilidade de infraestrutura de servidor adequada</li>
+        <li>Conectividade com internet estável na clínica</li>
+        <li>Acesso aos dados do sistema Coliseu para migração</li>
+        <li>Colaboração dos usuários-chave durante o desenvolvimento</li>
+    </ul>
+    
+    <div class="page-break"></div>
+    
+    <h2>3. REQUISITOS FUNCIONAIS</h2>
+    
+    <h3>3.1 Gestão de Usuários e Acessos</h3>
+    
+    <h4>RF-3.1.1 Cadastro e Gestão de Usuários</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.1.1-1"><span>O sistema deve permitir o cadastro e manutenção de usuários (funcionários e médicos)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.1.1-2"><span>Deve registrar informações como nome, e-mail, telefone, cargo, setor e tipo de usuário</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.1.1-3"><span>Deve possibilitar a definição de perfis de acesso específicos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.1.1-4"><span>Deve permitir a ativação/desativação de usuários</span></li>
+    </ul>
+    
+    <h4>RF-3.1.2 Autenticação e Controle de Acesso</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.1.2-1"><span>O sistema deve implementar autenticação segura via e-mail/senha</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.1.2-2"><span>Deve suportar autenticação em dois fatores (opcional)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.1.2-3"><span>Deve implementar controle de acesso baseado em perfis</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.1.2-4"><span>Deve registrar logs de acesso e operações críticas</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.1.2-5"><span>Deve implementar timeout de sessão por inatividade</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.1.2-6"><span>Deve permitir a recuperação de senha via e-mail</span></li>
+    </ul>
+    
+    <h3>3.2 Cadastros Básicos</h3>
+    
+    <h4>RF-3.2.1 Cadastro de Pacientes/Beneficiários</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.1-1"><span>O sistema deve permitir o cadastro completo de pacientes</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.1-2"><span>Deve registrar dados pessoais, documentos, contatos e convênios</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.1-3"><span>Deve validar CPF para evitar duplicidade de cadastros</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.1-4"><span>Deve permitir múltiplos convênios por paciente</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.1-5"><span>Deve vincular números de carteirinhas aos respectivos convênios</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.1-6"><span>Deve armazenar histórico de atendimentos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.1-7"><span>Deve possibilitar a importação de cadastros do sistema Coliseu</span></li>
+    </ul>
+    
+    <h4>RF-3.2.2 Cadastro de Profissionais de Saúde</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.2-1"><span>O sistema deve permitir o cadastro de médicos e outros profissionais</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.2-2"><span>Deve registrar dados como CRM, RQE e especialidades</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.2-3"><span>Deve armazenar documentos profissionais digitalizados</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.2-4"><span>Deve registrar dados da empresa para emissão de notas fiscais</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.2-5"><span>Deve possibilitar o acompanhamento de certificações e suas validades</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.2-6"><span>Deve permitir a configuração de percentuais de repasse por convênio</span></li>
+    </ul>
+    
+    <h4>RF-3.2.3 Cadastro de Convênios e Planos de Saúde</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.3-1"><span>O sistema deve permitir o cadastro de operadoras de planos de saúde</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.3-2"><span>Deve registrar dados específicos de cada convênio (IPSM, AMIL, COPASA, etc.)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.3-3"><span>Deve permitir a configuração de regras de faturamento por convênio</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.3-4"><span>Deve registrar tabelas de preços e procedimentos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.3-5"><span>Deve configurar prazos de retorno específicos por convênio</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.3-6"><span>Deve permitir a definição de formatos de carteirinhas por convênio</span></li>
+    </ul>
+    
+    <h4>RF-3.2.4 Cadastro de Especialidades e Procedimentos</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.4-1"><span>O sistema deve permitir o cadastro de especialidades médicas</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.4-2"><span>Deve permitir o cadastro de procedimentos médicos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.4-3"><span>Deve vincular procedimentos a especialidades</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.4-4"><span>Deve permitir a configuração de valores por procedimento/convênio</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.2.4-5"><span>Deve possibilitar a importação de tabelas TUSS/AMB</span></li>
+    </ul>
+    
+    <h3>3.3 Gestão de Agendas</h3>
+    
+    <h4>RF-3.3.1 Configuração de Agendas</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.1-1"><span>O sistema deve permitir a criação e configuração de agendas médicas</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.1-2"><span>Deve possibilitar a definição de dias e horários de atendimento</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.1-3"><span>Deve permitir a configuração de intervalos entre consultas</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.1-4"><span>Deve suportar a abertura de agendas quinzenais ou mensais</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.1-5"><span>Deve exibir visualmente no calendário as datas disponíveis</span></li>
+    </ul>
+    
+    <h4>RF-3.3.2 Agendamento de Consultas</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.2-1"><span>O sistema deve permitir o agendamento de consultas por especialidade ou médico</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.2-2"><span>Deve exibir claramente os horários disponíveis</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.2-3"><span>Deve verificar automaticamente a validade do convênio</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.2-4"><span>Deve verificar o prazo de retorno do paciente conforme regras do convênio</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.2-5"><span>Deve permitir a marcação de consultas recorrentes</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.2-6"><span>Deve registrar o canal de agendamento (telefone, presencial, etc.)</span></li>
+    </ul>
+    
+    <div class="page-break"></div>
+    
+    <h4>RF-3.3.3 Gestão de Encaixes</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.3-1"><span>O sistema deve permitir o encaixe de pacientes em horários já ocupados</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.3-2"><span>Deve registrar a autorização do médico para o encaixe</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.3-3"><span>Deve alertar sobre potenciais atrasos nos atendimentos</span></li>
+    </ul>
+    
+    <h4>RF-3.3.4 Cancelamentos e Remarcações</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.4-1"><span>O sistema deve permitir o cancelamento de consultas</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.4-2"><span>Deve registrar o motivo do cancelamento</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.4-3"><span>Deve permitir a remarcação rápida de consultas canceladas</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.4-4"><span>Deve possibilitar o cancelamento de blocos de agenda (por período)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.4-5"><span>Deve notificar pacientes sobre cancelamentos</span></li>
+    </ul>
+    
+    <h4>RF-3.3.5 Confirmação de Consultas</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.5-1"><span>O sistema deve gerar automaticamente lista de consultas a confirmar</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.5-2"><span>Deve registrar confirmações e ausências</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.5-3"><span>Deve suportar envio automático de lembretes por WhatsApp</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.3.5-4"><span>Deve personalizar mensagens de confirmação por especialidade</span></li>
+    </ul>
+    
+    <h3>3.4 Atendimento</h3>
+    
+    <h4>RF-3.4.1 Recepção e Check-in</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.1-1"><span>O sistema deve permitir o check-in do paciente na recepção</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.1-2"><span>Deve notificar o médico sobre a chegada do paciente</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.1-3"><span>Deve registrar horário de chegada e tempo de espera</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.1-4"><span>Deve alertar sobre documentação pendente ou irregular</span></li>
+    </ul>
+    
+    <h4>RF-3.4.2 Validação de Convênios</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.2-1"><span>O sistema deve validar a carteirinha do convênio no momento do atendimento</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.2-2"><span>Deve verificar carências e coberturas</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.2-3"><span>Deve solicitar autorização quando necessário</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.2-4"><span>Deve registrar número de autorização para faturamento</span></li>
+    </ul>
+    
+    <h4>RF-3.4.3 Prontuário Eletrônico</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.3-1"><span>O sistema deve disponibilizar prontuário eletrônico por paciente</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.3-2"><span>Deve permitir o registro de anamnese, diagnósticos e condutas</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.3-3"><span>Deve armazenar histórico completo de atendimentos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.3-4"><span>Deve suportar anexos de exames e documentos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.3-5"><span>Deve implementar controles rigorosos de privacidade</span></li>
+    </ul>
+    
+    <h4>RF-3.4.4 Emissão de Documentos</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.4-1"><span>O sistema deve gerar declarações de comparecimento</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.4-2"><span>Deve gerar receitas médicas</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.4-3"><span>Deve gerar solicitações de exames</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.4-4"><span>Deve gerar atestados médicos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.4.4-5"><span>Deve permitir a personalização de documentos por médico</span></li>
+    </ul>
+    
+    <h3>3.5 Faturamento</h3>
+    
+    <h4>RF-3.5.1 Processamento de Guias</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.1-1"><span>O sistema deve gerar guias de atendimento conforme padrões TISS</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.1-2"><span>Deve gerenciar guias por status (aberta, autorizada, faturada)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.1-3"><span>Deve permitir a inclusão manual de procedimentos quando necessário</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.1-4"><span>Deve validar procedimentos conforme tabelas dos convênios</span></li>
+    </ul>
+    
+    <h4>RF-3.5.2 Faturamento de Convênios</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.2-1"><span>O sistema deve gerar lotes de faturamento por convênio</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.2-2"><span>Deve suportar periodicidades específicas por convênio</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.2-3"><span>Deve adaptar-se aos requisitos de cada convênio (IPSM, AMIL, CEMIG, etc.)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.2-4"><span>Deve permitir faturamento manual e automatizado</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.2-5"><span>Deve gerar protocolos e relatórios para envio físico quando necessário</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.2-6"><span>Deve controlar prazos de envio de faturamento</span></li>
+    </ul>
+    
+    <div class="page-break"></div>
+    
+    <h4>RF-3.5.3 Controle de Recebimentos</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.3-1"><span>O sistema deve registrar recebimentos por convênio</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.3-2"><span>Deve permitir a conciliação de pagamentos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.3-3"><span>Deve identificar glosas e permitir recursos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.3-4"><span>Deve gerar relatórios de valores a receber</span></li>
+    </ul>
+    
+    <h4>RF-3.5.4 Repasse aos Profissionais</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.4-1"><span>O sistema deve calcular automaticamente repasses aos médicos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.4-2"><span>Deve considerar percentuais configurados por convênio/procedimento</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.4-3"><span>Deve gerar extratos detalhados para os profissionais</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.4-4"><span>Deve gerar cartas de solicitação de notas fiscais</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.4-5"><span>Deve controlar o recebimento de notas fiscais</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.5.4-6"><span>Deve gerar relatórios para autorização de pagamentos</span></li>
+    </ul>
+    
+    <h3>3.6 Gestão Financeira</h3>
+    
+    <h4>RF-3.6.1 Emissão de Notas Fiscais</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.6.1-1"><span>O sistema deve integrar-se com sistema de emissão de NFS-e</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.6.1-2"><span>Deve gerar notas fiscais para atendimentos particulares e convênios</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.6.1-3"><span>Deve registrar e controlar notas emitidas</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.6.1-4"><span>Deve gerar relatórios de faturamento por período</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.6.1-5"><span>Deve preparar dados para DMED anual</span></li>
+    </ul>
+    
+    <h4>RF-3.6.2 Controle de Pagamentos</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.6.2-1"><span>O sistema deve registrar pagamentos por diferentes meios (dinheiro, cartão, PIX)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.6.2-2"><span>Deve gerar relatórios de recebimentos por meio de pagamento</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.6.2-3"><span>Deve permitir o controle de descontos em folha</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.6.2-4"><span>Deve gerar relatórios para envio ao financeiro</span></li>
+    </ul>
+    
+    <h4>RF-3.6.3 Relatórios Financeiros</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.6.3-1"><span>O sistema deve gerar relatórios de faturamento por período</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.6.3-2"><span>Deve gerar relatórios por convênio</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.6.3-3"><span>Deve gerar relatórios por profissional</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.6.3-4"><span>Deve gerar relatórios de inadimplência</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.6.3-5"><span>Deve permitir a exportação em formatos editáveis (CSV, Excel)</span></li>
+    </ul>
+    
+    <h3>3.7 Gestão Administrativa</h3>
+    
+    <h4>RF-3.7.1 Controle de Documentação</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.7.1-1"><span>O sistema deve gerenciar documentos da clínica (alvarás, certificações)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.7.1-2"><span>Deve alertar sobre vencimentos próximos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.7.1-3"><span>Deve armazenar cópias digitais dos documentos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.7.1-4"><span>Deve registrar histórico de renovações</span></li>
+    </ul>
+    
+    <h4>RF-3.7.2 Gestão de Estoque</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.7.2-1"><span>O sistema deve controlar estoque de materiais médicos e de escritório</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.7.2-2"><span>Deve alertar sobre níveis baixos de estoque</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.7.2-3"><span>Deve registrar solicitações de compra</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.7.2-4"><span>Deve registrar recebimentos de material</span></li>
+    </ul>
+    
+    <div class="page-break"></div>
+    
+    <h4>RF-3.7.3 Comunicações</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.7.3-1"><span>O sistema deve permitir o envio de comunicados aos profissionais</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.7.3-2"><span>Deve gerenciar modelos de mensagens</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.7.3-3"><span>Deve registrar histórico de comunicações</span></li>
+    </ul>
+    
+    <h3>3.8 Relatórios e Dashboards</h3>
+    
+    <h4>RF-3.8.1 Relatórios Operacionais</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.8.1-1"><span>O sistema deve gerar relatórios de agendamentos por período</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.8.1-2"><span>Deve gerar relatórios de atendimentos realizados</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.8.1-3"><span>Deve gerar relatórios de faltas e cancelamentos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.8.1-4"><span>Deve gerar relatórios de tempos de espera</span></li>
+    </ul>
+    
+    <h4>RF-3.8.2 Relatórios Gerenciais</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.8.2-1"><span>O sistema deve gerar relatórios de produtividade por profissional</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.8.2-2"><span>Deve gerar relatórios de faturamento por especialidade</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.8.2-3"><span>Deve gerar relatórios comparativos entre períodos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.8.2-4"><span>Deve permitir a criação de relatórios personalizados</span></li>
+    </ul>
+    
+    <h4>RF-3.8.3 Dashboards</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.8.3-1"><span>O sistema deve apresentar dashboards interativos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.8.3-2"><span>Deve exibir indicadores-chave de desempenho (KPIs)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.8.3-3"><span>Deve permitir a personalização de visualizações</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rf-3.8.3-4"><span>Deve atualizar dados em tempo real</span></li>
+    </ul>
+    
+    <div class="page-break"></div>
+    
+    <h2>4. REQUISITOS NÃO FUNCIONAIS</h2>
+    
+    <h3>4.1 Requisitos de Usabilidade</h3>
+    
+    <h4>RNF-4.1.1 Interface de Usuário</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.1.1-1"><span>A interface deve ser intuitiva e responsiva, adaptando-se a diferentes dispositivos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.1.1-2"><span>Deve seguir princípios de design centrado no usuário</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.1.1-3"><span>Deve apresentar feedback visual para ações importantes</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.1.1-4"><span>Deve utilizar componentes consistentes em toda a aplicação</span></li>
+    </ul>
+    
+    <h4>RNF-4.1.2 Experiência do Usuário</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.1.2-1"><span>O sistema deve permitir navegação eficiente com poucos cliques</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.1.2-2"><span>Deve implementar atalhos de teclado para operações frequentes</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.1.2-3"><span>Deve exibir mensagens de erro claras e orientativas</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.1.2-4"><span>Deve permitir a personalização de preferências de visualização</span></li>
+    </ul>
+    
+    <h3>4.2 Requisitos de Desempenho</h3>
+    
+    <h4>RNF-4.2.1 Tempo de Resposta</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.2.1-1"><span>O sistema deve carregar páginas principais em menos de 2 segundos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.2.1-2"><span>Operações de busca devem retornar resultados em menos de 3 segundos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.2.1-3"><span>O agendamento completo deve ser realizado em menos de 30 segundos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.2.1-4"><span>Relatórios simples devem ser gerados em menos de 5 segundos</span></li>
+    </ul>
+    
+    <h4>RNF-4.2.2 Escalabilidade</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.2.2-1"><span>O sistema deve suportar até 50 usuários simultâneos na fase inicial</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.2.2-2"><span>Deve ser escalável para suportar crescimento de 20% ao ano no volume de dados</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.2.2-3"><span>Deve manter desempenho estável durante o horário de pico</span></li>
+    </ul>
+    
+    <h3>4.3 Requisitos de Segurança</h3>
+    
+    <h4>RNF-4.3.1 Autenticação e Autorização</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.3.1-1"><span>O sistema deve implementar autenticação segura com senhas fortes</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.3.1-2"><span>Deve utilizar JWT para gerenciamento de sessões</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.3.1-3"><span>Deve implementar controle de acesso baseado em perfis (RBAC)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.3.1-4"><span>Deve registrar tentativas de acesso não autorizado</span></li>
+    </ul>
+    
+    <div class="page-break"></div>
+    
+    <h4>RNF-4.3.2 Confidencialidade e Privacidade</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.3.2-1"><span>O sistema deve criptografar dados sensíveis no banco de dados</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.3.2-2"><span>Deve implementar criptografia em trânsito (HTTPS)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.3.2-3"><span>Deve estar em conformidade com a LGPD</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.3.2-4"><span>Deve implementar políticas de privacidade para dados médicos</span></li>
+    </ul>
+    
+    <h4>RNF-4.3.3 Auditoria</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.3.3-1"><span>O sistema deve manter logs de todas as ações críticas</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.3.3-2"><span>Deve registrar quem fez o quê, quando e a partir de onde</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.3.3-3"><span>Deve permitir a rastreabilidade de alterações em dados sensíveis</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.3.3-4"><span>Deve implementar mecanismos contra adulteração de logs</span></li>
+    </ul>
+    
+    <h3>4.4 Requisitos de Confiabilidade</h3>
+    
+    <h4>RNF-4.4.1 Disponibilidade</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.4.1-1"><span>O sistema deve estar disponível 99,5% do tempo durante horário comercial</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.4.1-2"><span>Deve implementar mecanismos de recuperação após falhas</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.4.1-3"><span>Deve permitir o agendamento de manutenções programadas</span></li>
+    </ul>
+    
+    <h4>RNF-4.4.2 Backup e Recuperação</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.4.2-1"><span>O sistema deve realizar backups diários automaticamente</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.4.2-2"><span>Deve permitir a restauração de dados para um ponto específico no tempo</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.4.2-3"><span>Deve manter histórico de backups por pelo menos 90 dias</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.4.2-4"><span>Deve testar periodicamente a integridade dos backups</span></li>
+    </ul>
+    
+    <h3>4.5 Requisitos de Manutenibilidade</h3>
+    
+    <h4>RNF-4.5.1 Modularidade</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.5.1-1"><span>O sistema deve ser desenvolvido com arquitetura modular</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.5.1-2"><span>Deve permitir a atualização de componentes específicos sem afetar todo o sistema</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.5.1-3"><span>Deve utilizar padrões de design que facilitem a manutenção</span></li>
+    </ul>
+    
+    <h4>RNF-4.5.2 Testabilidade</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.5.2-1"><span>O código deve ter cobertura de testes unitários mínima de 80%</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.5.2-2"><span>Deve implementar testes de integração para fluxos críticos</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.5.2-3"><span>Deve suportar testes automatizados de UI</span></li>
+    </ul>
+    
+    <h3>4.6 Requisitos de Portabilidade</h3>
+    
+    <h4>RNF-4.6.1 Compatibilidade</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.6.1-1"><span>O sistema deve ser compatível com navegadores modernos (Chrome, Firefox, Edge, Safari)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.6.1-2"><span>Deve funcionar em dispositivos diferentes (desktop, tablet, smartphones)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.6.1-3"><span>Deve suportar sistemas operacionais diversos (Windows, MacOS, Linux)</span></li>
+    </ul>
+    
+    <div class="page-break"></div>
+    
+    <h4>RNF-4.6.2 Interoperabilidade</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.6.2-1"><span>O sistema deve oferecer APIs RESTful para integração com outros sistemas</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.6.2-2"><span>Deve suportar a importação/exportação de dados em formatos padrão</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.6.2-3"><span>Deve permitir a integração com sistemas de prontuário eletrônico</span></li>
+    </ul>
+    
+    <h3>4.7 Requisitos de Implantação</h3>
+    
+    <h4>RNF-4.7.1 Instalação</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.7.1-1"><span>O sistema deve ser implantado em ambiente de nuvem ou on-premises</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.7.1-2"><span>Deve permitir a instalação com configuração mínima de parâmetros</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.7.1-3"><span>Deve fornecer scripts de implantação automatizados</span></li>
+    </ul>
+    
+    <h4>RNF-4.7.2 Atualizações</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.7.2-1"><span>O sistema deve suportar atualizações sem perda de dados</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.7.2-2"><span>Deve permitir rollback em caso de problemas</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="rnf-4.7.2-3"><span>Deve implementar versionamento semântico</span></li>
+    </ul>
+    
+    <div class="page-break"></div>
+    
+    <h2>5. ARQUITETURA TÉCNICA</h2>
+    
+    <h3>5.1 Visão Geral da Arquitetura</h3>
+    <p>O sistema será desenvolvido como uma aplicação web moderna, utilizando arquitetura de cliente-servidor com frontend web responsivo. A arquitetura seguirá os princípios de Clean Architecture, separando claramente as responsabilidades em camadas.</p>
+    
+    <h3>5.2 Tecnologias Utilizadas</h3>
+    
+    <h4>5.2.1 Frontend</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-fe-1"><span><strong>Framework</strong>: Next.js 14.0+</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-fe-2"><span><strong>Linguagem</strong>: TypeScript 5.0+</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-fe-3"><span><strong>Biblioteca de UI</strong>: React 18+</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-fe-4"><span><strong>Gerenciamento de Estado</strong>: React Context API e SWR</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-fe-5"><span><strong>Estilização</strong>: Tailwind CSS + Styled Components</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-fe-6"><span><strong>Validação de Formulários</strong>: React Hook Form + Zod</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-fe-7"><span><strong>Cliente HTTP</strong>: Axios</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-fe-8"><span><strong>Testes</strong>: Jest + React Testing Library</span></li>
+    </ul>
+    
+    <h4>5.2.2 Backend</h4>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-be-1"><span><strong>Framework</strong>: Next.js API Routes</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-be-2"><span><strong>Linguagem</strong>: TypeScript 5.0+</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-be-3"><span><strong>ORM</strong>: Prisma</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-be-4"><span><strong>SGBD</strong>: MySQL 8.0+</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-be-5"><span><strong>Autenticação</strong>: NextAuth.js + JWT</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-be-6"><span><strong>Validação</strong>: Zod</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-be-7"><span><strong>Logging</strong>: Winston</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="tech-be-8"><span><strong>Testes</strong>: Jest + Supertest</span></li>
+    </ul>
+    
+    <h3>5.3 Organização do Código</h3>
+    
+    <h4>5.3.1 Estrutura de Diretórios</h4>
+    <div class="code-block">
+/
+├─ prisma/                  # Configuração do Prisma e modelos
+├─ public/                  # Arquivos públicos estáticos
+├─ src/
+│   ├─ app/                 # Componentes de página do Next.js
+│   ├─ components/          # Componentes React reutilizáveis
+│   │   ├─ ui/              # Componentes de UI básicos
+│   │   ├─ forms/           # Componentes de formulário
+│   │   ├─ layouts/         # Componentes de layout
+│   │   └─ [module]/        # Componentes específicos de módulos
+│   ├─ contexts/            # Contextos React para estado global
+│   ├─ hooks/               # Custom hooks
+│   ├─ lib/                 # Utilitários e helpers
+│   ├─ models/              # Tipos e interfaces
+│   ├─ pages/               # Páginas do Next.js
+│   │   └─ api/             # Rotas de API
+│   ├─ server/              # Código específico do servidor
+│   │   ├─ auth/            # Lógica de autenticação
+│   │   ├─ db/              # Lógica de acesso a dados
+│   │   └─ services/        # Serviços do backend
+│   ├─ styles/              # Estilos globais
+│   └─ utils/               # Funções utilitárias
+├─ tests/                   # Testes
+└─ .env                     # Variáveis de ambiente
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <h3>5.4 Padrões de Design</h3>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="design-1"><span><strong>Repository Pattern</strong>: para acesso a dados</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="design-2"><span><strong>Service Layer</strong>: para lógica de negócios</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="design-3"><span><strong>Component-Based Architecture</strong>: para o frontend</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="design-4"><span><strong>Hooks Pattern</strong>: para lógica reutilizável no React</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="design-5"><span><strong>Clean Architecture</strong>: separação de responsabilidades</span></li>
+    </ul>
+    
+    <h3>5.5 Fluxo de Dados</h3>
+    <ol>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="flow-1"><span><strong>Cliente para Servidor</strong>: Requisições HTTP via Axios para as API Routes</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="flow-2"><span><strong>Processamento no Servidor</strong>: Validação → Autorização → Serviço → Repositório → Banco de Dados</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="flow-3"><span><strong>Servidor para Cliente</strong>: Respostas JSON com dados estruturados</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="flow-4"><span><strong>Renderização no Cliente</strong>: Atualização do estado React e re-renderização de componentes</span></li>
+    </ol>
+    
+    <h3>5.6 Estratégias de Deploy</h3>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="deploy-1"><span><strong>Ambiente de Desenvolvimento</strong>: Deploy local para testes</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="deploy-2"><span><strong>Ambiente de Homologação</strong>: Deploy em servidor de staging</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="deploy-3"><span><strong>Ambiente de Produção</strong>: Deploy em servidor de produção</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="deploy-4"><span><strong>CI/CD</strong>: GitHub Actions para automação de testes e deploy</span></li>
+    </ul>
+    
+    <div class="page-break"></div>
+    
+    <h2>6. MODELO DE DADOS</h2>
+    
+    <h3>6.1 Diagrama Entidade-Relacionamento</h3>
+    <p>O sistema utilizará um banco de dados relacional MySQL, com o seguinte esquema conceitual (principais entidades):</p>
+    <ul>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="entity-1"><span>Usuários (users)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="entity-2"><span>Pacientes (patients)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="entity-3"><span>Profissionais (professionals)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="entity-4"><span>Empresas (companies)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="entity-5"><span>Convênios (health_plans)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="entity-6"><span>Especialidades (specialties)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="entity-7"><span>Procedimentos (procedures)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="entity-8"><span>Agendas (schedules)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="entity-9"><span>Consultas (appointments)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="entity-10"><span>Atendimentos (medical_records)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="entity-11"><span>Guias (service_orders)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="entity-12"><span>Faturamentos (billings)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="entity-13"><span>Pagamentos (payments)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="entity-14"><span>Repasses (professional_payments)</span></li>
+        <li class="rf-item"><input type="checkbox" class="rf-checkbox" id="entity-15"><span>Documentos (documents)</span></li>
+    </ul>
+    
+    <h3>6.2 Principais Entidades</h3>
+    
+    <h4>6.2.1 Usuário (User)</h4>
+    <ul>
+        <li>id: UUID (PK)</li>
+        <li>username: String (Unique)</li>
+        <li>email: String (Unique)</li>
+        <li>password_hash: String</li>
+        <li>role: Enum (admin, doctor, receptionist, etc.)</li>
+        <li>is_active: Boolean</li>
+        <li>last_login: DateTime</li>
+        <li>created_at: DateTime</li>
+        <li>updated_at: DateTime</li>
+    </ul>
+    
+    <h4>6.2.2 Paciente (Patient)</h4>
+    <ul>
+        <li>id: UUID (PK)</li>
+        <li>name: String</li>
+        <li>cpf: String (Unique)</li>
+        <li>birth_date: Date</li>
+        <li>gender: Enum</li>
+        <li>address: Embedded Object</li>
+        <li>contact: Embedded Object</li>
+        <li>health_plans: Relation (PatientHealthPlan)</li>
+        <li>appointments: Relation (Appointment)</li>
+        <li>medical_records: Relation (MedicalRecord)</li>
+        <li>created_at: DateTime</li>
+        <li>updated_at: DateTime</li>
+    </ul>
+    
+    <div class="page-break"></div>
+    
+    <h4>6.2.3 Profissional (Professional)</h4>
+    <ul>
+        <li>id: UUID (PK)</li>
+        <li>user_id: UUID (FK to User)</li>
+        <li>name: String</li>
+        <li>crm: String</li>
+        <li>rqe: String</li>
+        <li>specialties: Relation (ProfessionalSpecialty)</li>
+        <li>company_id: UUID (FK to Company)</li>
+        <li>schedules: Relation (Schedule)</li>
+        <li>appointments: Relation (Appointment)</li>
+        <li>commission_rates: Relation (CommissionRate)</li>
+        <li>created_at: DateTime</li>
+        <li>updated_at: DateTime</li>
+    </ul>
+    
+    <h4>6.2.4 Convênio (HealthPlan)</h4>
+    <ul>
+        <li>id: UUID (PK)</li>
+        <li>name: String</li>
+        <li>code: String</li>
+        <li>billing_day: Integer</li>
+        <li>return_period: Integer</li>
+        <li>card_format: String</li>
+        <li>payment_type: Enum</li>
+        <li>procedures: Relation (HealthPlanProcedure)</li>
+        <li>patients: Relation (PatientHealthPlan)</li>
+        <li>created_at: DateTime</li>
+        <li>updated_at: DateTime</li>
+    </ul>
+    
+    <h4>6.2.5 Consulta (Appointment)</h4>
+    <ul>
+        <li>id: UUID (PK)</li>
+        <li>patient_id: UUID (FK to Patient)</li>
+        <li>professional_id: UUID (FK to Professional)</li>
+        <li>health_plan_id: UUID (FK to HealthPlan)</li>
+        <li>specialty_id: UUID (FK to Specialty)</li>
+        <li>date_time: DateTime</li>
+        <li>duration: Integer</li>
+        <li>status: Enum (scheduled, confirmed, completed, cancelled)</li>
+        <li>cancellation_reason: String</li>
+        <li>scheduling_channel: Enum</li>
+        <li>is_return: Boolean</li>
+        <li>service_order_id: UUID (FK to ServiceOrder)</li>
+        <li>created_at: DateTime</li>
+        <li>updated_at: DateTime</li>
+    </ul>
+    
+    <h4>6.2.6 Faturamento (Billing)</h4>
+    <ul>
+        <li>id: UUID (PK)</li>
+        <li>health_plan_id: UUID (FK to HealthPlan)</li>
+        <li>start_date: Date</li>
+        <li>end_date: Date</li>
+        <li>status: Enum (pending, processing, completed)</li>
+        <li>total_value: Decimal</li>
+        <li>protocol_number: String</li>
+        <li>service_orders: Relation (ServiceOrder)</li>
+        <li>created_at: DateTime</li>
+        <li>updated_at: DateTime</li>
+    </ul>
+    
+    <h4>6.2.7 Ordem de Serviço (ServiceOrder)</h4>
+    <ul>
+        <li>id: UUID (PK)</li>
+        <li>appointment_id: UUID (FK to Appointment)</li>
+        <li>patient_id: UUID (FK to Patient)</li>
+        <li>professional_id: UUID (FK to Professional)</li>
+        <li>health_plan_id: UUID (FK to HealthPlan)</li>
+        <li>procedure_id: UUID (FK to Procedure)</li>
+        <li>authorization_number: String</li>
+        <li>status: Enum (pending, authorized, denied, billed)</li>
+        <li>value: Decimal</li>
+        <li>billing_id: UUID (FK to Billing)</li>
+        <li>created_at: DateTime</li>
+        <li>updated_at: DateTime</li>
+    </ul>
+    
+    <h4>6.2.8 Prontuário (MedicalRecord)</h4>
+    <ul>
+        <li>id: UUID (PK)</li>
+        <li>patient_id: UUID (FK to Patient)</li>
+        <li>professional_id: UUID (FK to Professional)</li>
+        <li>appointment_id: UUID (FK to Appointment)</li>
+        <li>record_date: DateTime</li>
+        <li>anamnesis: Text</li>
+        <li>diagnosis: Text</li>
+        <li>prescription: Text</li>
+        <li>observations: Text</li>
+        <li>attachments: Relation (Attachment)</li>
+        <li>created_at: DateTime</li>
+        <li>updated_at: DateTime</li>
+    </ul>
+    
+    <h4>6.2.9 Agenda (Schedule)</h4>
+    <ul>
+        <li>id: UUID (PK)</li>
+        <li>professional_id: UUID (FK to Professional)</li>
+        <li>day_of_week: Integer</li>
+        <li>start_time: Time</li>
+        <li>end_time: Time</li>
+        <li>interval: Integer</li>
+        <li>is_active: Boolean</li>
+        <li>created_at: DateTime</li>
+        <li>updated_at: DateTime</li>
+    </ul>
+    
+    <h3>7. Interfaces do Usuário</h3>
+    
+    <h4>7.1 Princípios de Interface</h4>
+    <ul>
+        <li>Design responsivo para adaptação a diferentes dispositivos</li>
+        <li>Interface intuitiva com ênfase em usabilidade</li>
+        <li>Paleta de cores consistente com a identidade visual da clínica</li>
+        <li>Feedback visual para ações do usuário</li>
+        <li>Acessibilidade conforme diretrizes WCAG 2.1</li>
+    </ul>
+    
+    <h4>7.2 Telas Principais</h4>
+    
+    <h5>7.2.1 Login e Autenticação</h5>
+    <ul>
+        <li>Tela de login com campos para usuário e senha</li>
+        <li>Opção de recuperação de senha</li>
+        <li>Autenticação de dois fatores (opcional)</li>
+    </ul>
+    
+    <h5>7.2.2 Dashboard</h5>
+    <ul>
+        <li>Visão geral das atividades do dia</li>
+        <li>Indicadores de desempenho relevantes ao perfil do usuário</li>
+        <li>Atalhos para funções frequentemente utilizadas</li>
+        <li>Notificações e alertas</li>
+    </ul>
+    
+    <h5>7.2.3 Agenda</h5>
+    <ul>
+        <li>Visualização diária, semanal e mensal</li>
+        <li>Filtros por profissional, especialidade e status</li>
+        <li>Codificação por cores para diferentes tipos de consulta</li>
+        <li>Interface de arrastar e soltar para remarcações</li>
+    </ul>
+    
+    <h5>7.2.4 Cadastro de Pacientes</h5>
+    <ul>
+        <li>Formulário de cadastro completo com validações</li>
+        <li>Upload de documentos e foto</li>
+        <li>Histórico de atendimentos</li>
+        <li>Gestão de convênios associados</li>
+    </ul>
+    
+    <h5>7.2.5 Prontuário Eletrônico</h5>
+    <ul>
+        <li>Interface para registro de anamnese, diagnóstico e prescrição</li>
+        <li>Histórico de atendimentos anteriores</li>
+        <li>Upload e visualização de exames</li>
+        <li>Emissão de receitas e atestados</li>
+    </ul>
+    
+    <h5>7.2.6 Faturamento</h5>
+    <ul>
+        <li>Painel de controle de guias e autorizações</li>
+        <li>Interface para geração de lotes de faturamento</li>
+        <li>Relatórios de glosas e pendências</li>
+        <li>Controle de repasses aos profissionais</li>
+    </ul>
+    
+    <h3>8. Implementação</h3>
+    
+    <h4>8.1 Plano de Implementação</h4>
+    <ul>
+        <li>Fase 1: Desenvolvimento dos módulos básicos (cadastros, agenda)</li>
+        <li>Fase 2: Desenvolvimento dos módulos de atendimento e prontuário</li>
+        <li>Fase 3: Desenvolvimento dos módulos financeiros</li>
+        <li>Fase 4: Integrações e relatórios</li>
+        <li>Fase 5: Testes, ajustes e implantação</li>
+    </ul>
+    
+    <h4>8.2 Estratégia de Testes</h4>
+    <ul>
+        <li>Testes unitários para validação de componentes individuais</li>
+        <li>Testes de integração para validação de fluxos completos</li>
+        <li>Testes de carga para validação de desempenho</li>
+        <li>Testes de usabilidade com usuários reais</li>
+        <li>Testes de segurança e vulnerabilidade</li>
+    </ul>
+    
+    <h4>8.3 Migração de Dados</h4>
+    <ul>
+        <li>Levantamento dos dados existentes</li>
+        <li>Definição de estratégia de migração</li>
+        <li>Desenvolvimento de scripts de migração</li>
+        <li>Testes de migração em ambiente controlado</li>
+        <li>Migração em produção</li>
+    </ul>
+    
+    <h4>8.4 Treinamento</h4>
+    <ul>
+        <li>Elaboração de material de treinamento</li>
+        <li>Treinamento da equipe administrativa</li>
+        <li>Treinamento da equipe médica</li>
+        <li>Suporte pós-implantação</li>
+    </ul>
+    
+    <h3>9. Segurança</h3>
+    
+    <h4>9.1 Requisitos de Segurança</h4>
+    <ul>
+        <li>Autenticação segura com senhas fortes e possibilidade de 2FA</li>
+        <li>Autorização baseada em papéis (RBAC)</li>
+        <li>Criptografia de dados sensíveis em repouso e em trânsito</li>
+        <li>Proteção contra ataques comuns (SQL Injection, XSS, CSRF)</li>
+        <li>Auditoria de ações de usuários</li>
+    </ul>
+    
+    <h4>9.2 Conformidade com LGPD</h4>
+    <ul>
+        <li>Implementação de políticas de privacidade</li>
+        <li>Mecanismos para consentimento explícito</li>
+        <li>Procedimentos para atender solicitações de acesso, correção e exclusão de dados</li>
+        <li>Registro de operações de tratamento de dados pessoais</li>
+        <li>Plano de resposta a incidentes</li>
+    </ul>
+    
+    <h4>9.3 Backup e Recuperação</h4>
+    <ul>
+        <li>Backups automáticos diários</li>
+        <li>Armazenamento redundante</li>
+        <li>Procedimentos de recuperação de desastres</li>
+        <li>Testes periódicos de restauração</li>
+    </ul>
+    
+    <h3>10. Considerações Finais</h3>
+    
+    <h4>10.1 Riscos e Mitigações</h4>
+    <ul>
+        <li>Resistência à mudança: Mitigado por treinamento adequado e envolvimento dos usuários</li>
+        <li>Complexidade de integração: Mitigado por planejamento detalhado e testes</li>
+        <li>Segurança de dados: Mitigado por implementação de controles robustos</li>
+        <li>Desempenho sob carga: Mitigado por testes de carga e otimizações</li>
+    </ul>
+    
+    <h4>10.2 Suporte e Manutenção</h4>
+    <ul>
+        <li>Suporte técnico 8x5 para incidentes críticos</li>
+        <li>Atualizações periódicas de segurança</li>
+        <li>Manutenção evolutiva conforme necessidades do cliente</li>
+        <li>Documentação técnica e de usuário</li>
+    </ul>
+    
+    <h4>10.3 Evoluções Futuras</h4>
+    <ul>
+        <li>Módulo de telemedicina</li>
+        <li>Aplicativo móvel para pacientes</li>
+        <li>Integração com dispositivos médicos</li>
+        <li>Recursos de inteligência artificial para apoio ao diagnóstico</li>
+    </ul>
+    
+    <div class="footer">
+        <p>Documento elaborado pela PontoBR Sistemas para a Fundação Guimarães Rosa.</p>
+        <p>Versão 1.0 - 14 de maio de 2025</p>
+        <p>Confidencial - Uso Interno</p>
+    </div>
+    </div>
+    
+    <script src="script.js"></script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,219 @@
+@page {
+    size: A4;
+    margin: 2.5cm 3cm;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    font-size: 12pt;
+    line-height: 1.5;
+    color: #333;
+    margin: 0;
+    padding: 0 20px 100px 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2cm;
+    padding-top: 30px;
+}
+
+.logo {
+    max-width: 250px;
+    height: auto;
+    margin-bottom: 0.5cm;
+}
+
+h1 {
+    font-size: 18pt;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1cm;
+}
+
+h2 {
+    font-size: 16pt;
+    font-weight: bold;
+    margin-top: 0.8cm;
+    margin-bottom: 0.5cm;
+    page-break-after: avoid;
+}
+
+h3 {
+    font-size: 14pt;
+    font-weight: bold;
+    margin-top: 0.7cm;
+    margin-bottom: 0.4cm;
+    page-break-after: avoid;
+}
+
+h4 {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-top: 0.6cm;
+    margin-bottom: 0.3cm;
+    page-break-after: avoid;
+}
+
+p {
+    text-align: justify;
+    margin-bottom: 0.5cm;
+}
+
+ul, ol {
+    margin-bottom: 0.5cm;
+    padding-left: 1cm;
+}
+
+li {
+    margin-bottom: 0.2cm;
+}
+
+.rf-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0.2cm;
+    list-style-type: none;
+}
+
+.rf-checkbox {
+    margin-right: 10px;
+    margin-top: 3px;
+}
+
+.page-break {
+    page-break-before: always;
+    margin-top: 2cm;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0.7cm;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 0.3cm;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.footer {
+    text-align: center;
+    font-size: 10pt;
+    margin-top: 1cm;
+}
+
+.meta-info {
+    margin-bottom: 1cm;
+}
+
+.meta-info p {
+    margin-bottom: 0.2cm;
+}
+
+code {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 0.1cm 0.2cm;
+    border-radius: 0.1cm;
+}
+
+.code-block {
+    font-family: 'Courier New', monospace;
+    background-color: #f5f5f5;
+    padding: 0.5cm;
+    border-radius: 0.2cm;
+    margin-bottom: 0.7cm;
+    overflow-x: auto;
+    white-space: pre;
+}
+
+.toc {
+    margin-bottom: 1cm;
+}
+
+.toc h2 {
+    text-align: center;
+}
+
+/* Estilos específicos para controles de progresso */
+.progress-controls {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+    width: 200px;
+}
+
+.progress-bar-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.progress-bar {
+    height: 20px;
+    background-color: #4CAF50;
+    border-radius: 5px;
+    text-align: center;
+    color: white;
+    line-height: 20px;
+    transition: width 0.3s ease;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-bottom: 5px;
+    flex: 1 0 48%;
+    margin: 1%;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para impressão */
+@media print {
+    .progress-controls {
+        display: none;
+    }
+    
+    .rf-checkbox {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    body {
+        padding: 0;
+    }
+}
