@@ -15,17 +15,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Função para atualizar a barra de progresso
 function updateProgressBar() {
+    // Selecionar apenas checkboxes da seção 3 (Requisitos Funcionais)
     const checkboxes = document.querySelectorAll('.rf-checkbox');
-    const totalCheckboxes = checkboxes.length;
+    let totalCheckboxes = 0;
     let checkedCheckboxes = 0;
     
     checkboxes.forEach(checkbox => {
-        if (checkbox.checked) {
-            checkedCheckboxes++;
+        // Verificar se o ID começa com 'rf-3' (seção 3)
+        if (checkbox.id.startsWith('rf-3')) {
+            totalCheckboxes++;
+            if (checkbox.checked) {
+                checkedCheckboxes++;
+            }
         }
     });
     
-    const progressPercentage = Math.round((checkedCheckboxes / totalCheckboxes) * 100);
+    const progressPercentage = totalCheckboxes > 0 ? Math.round((checkedCheckboxes / totalCheckboxes) * 100) : 0;
     const progressBar = document.getElementById('progressBar');
     progressBar.style.width = progressPercentage + '%';
     progressBar.textContent = progressPercentage + '%';
@@ -37,7 +42,10 @@ function autoSaveProgress() {
     const progress = {};
     
     checkboxes.forEach(checkbox => {
-        progress[checkbox.id] = checkbox.checked;
+        // Salvar apenas os checkboxes da seção 3
+        if (checkbox.id.startsWith('rf-3')) {
+            progress[checkbox.id] = checkbox.checked;
+        }
     });
     
     // Backup local em caso de falha na conexão
@@ -62,7 +70,10 @@ function saveProgress() {
     const progress = {};
     
     checkboxes.forEach(checkbox => {
-        progress[checkbox.id] = checkbox.checked;
+        // Salvar apenas os checkboxes da seção 3
+        if (checkbox.id.startsWith('rf-3')) {
+            progress[checkbox.id] = checkbox.checked;
+        }
     });
     
     // Backup local em caso de falha na conexão
@@ -131,7 +142,8 @@ function applyProgress(progress) {
     const checkboxes = document.querySelectorAll('.rf-checkbox');
     
     checkboxes.forEach(checkbox => {
-        if (progress[checkbox.id] !== undefined) {
+        // Aplicar apenas aos checkboxes da seção 3
+        if (checkbox.id.startsWith('rf-3') && progress[checkbox.id] !== undefined) {
             checkbox.checked = progress[checkbox.id];
         }
     });
